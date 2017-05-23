@@ -1,0 +1,14 @@
+{
+  "name": "airline-scraper",
+  "version": "1.0.0",
+  "description": "https://www.via.id/",
+  "main": "scraper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel Chan",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.81.0"
+  }
+}
