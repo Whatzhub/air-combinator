@@ -3,7 +3,6 @@ const fs = require('fs');
 
 const Helpers = require('./modules/helpers');
 const OTATable = require('./modules/otaTable');
-
 const CSVModel = require('./model/csvModel');
 
 const FlightRaja = require('./otas/flightRaja');
@@ -12,7 +11,6 @@ const ExpediaSG = require('./otas/expediaSG');
 const HelloWorld = require('./otas/helloWorld');
 
 // THE SCRAPING ENGINE
-
 
 // STEP 1 - Fares Scraping
 console.log('Running Fares Scraping.\n');
@@ -42,35 +40,23 @@ Promise.all([
                 console.log('JSON writes done.\n');
                 console.log('Transforming into CSV...\n');
 
-                FlightRaja.jsonToCSV(dataArr[0], 'SYD', 'PEK')
-                    .then(rows => {
-                        let csvData = rows.map(i => i.join(',')).join('\n');
-                        Helpers.writeFile('./csv/FlightRaja.csv', csvData);
-                    })
-                    .then(_2 => {
+                Promise.all([
+                        FlightRaja.jsonToCSV(dataArr[0], 'SYD', 'PEK'),
+                        Flight365.jsonToCSV(dataArr[1], 'SYD', 'PEK')
+                    ])
+                    .then(dataArr => {
+
+                        // STEP 4 - Save results as one CSV
                         console.log('Joining CSVs...\n');
-                        // STEP 4 - Join all CSV as one
 
-                        return console.log('All processes done!');
+                        let joinedArr = [CSVModel].concat(dataArr[0], dataArr[1]);
+                        let finalArrRows = joinedArr.map(i => i.join(',')).join('\n');
+                        Helpers.writeFile('./csv/allOTAs.csv', finalArrRows);
+
+                        return console.log('All processes successfully done!');
                     })
-                    .catch(err => console.log(30, err));
-
-                return 1;
+                    .catch(err => console.log(58, err));
             })
-            .catch(err => console.log(36, err));
+            .catch(err => console.log(62, err));
     })
-    .catch(err => console.log(41, err));
-
-
-
-// NOTE: TESTING
-
-// Helpers.downloadWithRequestLib(HelloWorld)
-//     .then(data => {
-//         var a = JSON.stringify((data.data.result));
-//         // console.log(a);
-//         console.log(38, a);
-//         Helpers.writeFile('./json/HelloWorld.json', a),
-//             console.log('Fares Scraper ended...');
-//     })
-//     .catch(err => console.log(36, err));
+    .catch(err => console.log(64, err));

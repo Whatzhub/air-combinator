@@ -62,7 +62,7 @@ Helpers.downloadWithRequestLib = function (otaObj) {
 
     var options = {
         method: otaObj.method || 'POST',
-        url: otaObj.url || 'https://www.helloworld.com.au/booking/api/search/search',
+        url: otaObj.url,
         headers: otaObj.headers,
         body: otaObj.body,
         json: true

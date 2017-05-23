@@ -11,7 +11,7 @@ const FlightRaja = {
         'Via-Access-Token': 'c51b5435-cec6-4de2-b133-419139122a02',
         'X-Requested-With': 'XMLHttpRequest'
     },
-    body: "{\"sectorInfos\":[{\"src\":{\"code\":\"SYD\",\"name\":\"Sydney Kingsford Smith Arpt\",\"country\":\"Australia\",\"city\":\"Sydney\"},\"dest\":{\"code\":\"PEK\",\"name\":\"Beijing Capital Arpt\",\"country\":\"China\",\"city\":\"Beijing\"},\"date\":\"2017-05-22\",\"debug\":false},{\"src\":{\"code\":\"PEK\",\"name\":\"Beijing Capital Arpt\",\"country\":\"China\",\"city\":\"Beijing\"},\"dest\":{\"code\":\"SYD\",\"name\":\"Sydney Kingsford Smith Arpt\",\"country\":\"Australia\",\"city\":\"Sydney\"},\"date\":\"2017-05-25\",\"debug\":false}],\"class\":\"ALL\",\"paxCount\":{\"adt\":1,\"chd\":0,\"inf\":0},\"route\":\"ALL\",\"disc\":false,\"multiCity\":false,\"senior\":false,\"special\":false,\"domestic\":false,\"isOfflineSearch\":false,\"isPaxWiseCommission\":false,\"prefAirlines\":[{\"code\":\"GDS\"}]}",
+    body: "{\"sectorInfos\":[{\"src\":{\"code\":\"SYD\",\"name\":\"Sydney Kingsford Smith Arpt\",\"country\":\"Australia\",\"city\":\"Sydney\"},\"dest\":{\"code\":\"PEK\",\"name\":\"Beijing Capital Arpt\",\"country\":\"China\",\"city\":\"Beijing\"},\"date\":\"2017-05-25\",\"debug\":false},{\"src\":{\"code\":\"PEK\",\"name\":\"Beijing Capital Arpt\",\"country\":\"China\",\"city\":\"Beijing\"},\"dest\":{\"code\":\"SYD\",\"name\":\"Sydney Kingsford Smith Arpt\",\"country\":\"Australia\",\"city\":\"Sydney\"},\"date\":\"2017-05-28\",\"debug\":false}],\"class\":\"ALL\",\"paxCount\":{\"adt\":1,\"chd\":0,\"inf\":0},\"route\":\"ALL\",\"disc\":false,\"multiCity\":false,\"senior\":false,\"special\":false,\"domestic\":false,\"isOfflineSearch\":false,\"isPaxWiseCommission\":false,\"prefAirlines\":[{\"code\":\"GDS\"}]}",
     jsonToCSV: function (data, departCode, returnCode) {
         let jsonData = JSON.parse(data);
         let dc = departCode; // 'SYD'
@@ -96,7 +96,7 @@ const FlightRaja = {
                     }
 
                      // > 1 Fly Return Leg
-                    if (j.arrDetail.code != rc && j.arrDetail.code == dc && j.isReturn == true) {
+                    if (j.depDetail.code != rc && j.arrDetail.code == dc && j.isReturn == true) {
                         let dTime1 = i.flights[returnIndex].depDetail.time.split(' ')[1].split('.')[0];
                         let departTime1 = dTime1.substring(0, dTime1.length - 3);
                         let aTime1 = i.flights[returnIndex].arrDetail.time.split(' ')[1].split('.')[0];

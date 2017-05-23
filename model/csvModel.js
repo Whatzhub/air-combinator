@@ -19,7 +19,7 @@ const CSVModel = [
     // RETURN
     'returnFlightNo', // 121
     'returnAirlineCode', // CX
-    'returnRoute', // 06:30 - KIX / 07:40 - HND | 08:55 - HND / 12:30 - HKG
+    'returnRoute' // 06:30 - KIX / 07:40 - HND | 08:55 - HND / 12:30 - HKG
 ];
 
 /* 
