@@ -10,10 +10,12 @@ const Flight365 = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
     },
     body: 'searchparams%5Bjourneys%5D%5B0%5D%5Borigin%5D=SYD&searchparams%5Bjourneys%5D%5B0%5D%5Bdestination%5D=PEK&searchparams%5Bjourneys%5D%5B0%5D%5Bdeparturedate%5D=2017-05-25&searchparams%5Bjourneys%5D%5B0%5D%5Bcabinclass%5D=Economy&searchparams%5Bjourneys%5D%5B1%5D%5Borigin%5D=PEK&searchparams%5Bjourneys%5D%5B1%5D%5Bdestination%5D=HKG&searchparams%5Bjourneys%5D%5B1%5D%5Bdeparturedate%5D=2017-05-28&searchparams%5Bjourneys%5D%5B1%5D%5Bcabinclass%5D=Economy&searchparams%5Bpassengers%5D%5Badt%5D=1&searchparams%5Bpassengers%5D%5Bcnn%5D=0&searchparams%5Bpassengers%5D%5Binf%5D=0&token=bhkq40v4gqcbpz0t2nccckfigngquso2',
-    jsonToCSV: function (data, departCode, returnCode) {
+    jsonToCSV: function (data, departCode, returnCode, departDate, returnDate) {
         let jsonData = JSON.parse(data);
         let dc = departCode;
         let rc = returnCode;
+        let dd = departDate;
+        let rd = returnDate;
         let dataArr = [];
         let rowIndex = 0;
         let market = dc + rc;
@@ -39,8 +41,8 @@ const Flight365 = {
                             market, // market
                             Flight365.host,// OTA
                             departLeg1.cabin, // type
-                            departLeg1.origin.departuretime.date, // departDate
-                            returnLeg1.origin.departuretime.date // returnDate
+                            dd, // departDate
+                            rd // returnDate
                         ]);
 
                         // 1 Fly Depart Leg

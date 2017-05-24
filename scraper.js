@@ -16,23 +16,23 @@ const HelloWorld = require('./otas/helloWorld');
 console.log('Running Fares Scraping.\n');
 
 Promise.all([
-        Helpers.downloadWithHttpsXml(FlightRaja),
-        Helpers.downloadWithHttps(Flight365)
-        // Helpers.downloadWithHttps(ExpediaSG),
-        // Helpers.downloadWithRequestLib(HelloWorld)
+        // Helpers.downloadWithHttpsXml(FlightRaja),
+        // Helpers.downloadWithHttps(Flight365),
+        Helpers.downloadWithRequestLib(HelloWorld)
+        // Helpers.downloadWithHttps(ExpediaSG)
     ])
     .then(dataArr => {
 
         // STEP 2 - Save results as JSON
         console.log('Fares Scraping done.\n');
         console.log('Writing JSON copies...\n');
-        // let dataSetA = JSON.stringify((dataArr[3].data.result));
+        let helloWorldData = JSON.stringify((dataArr[0].data.result));
 
         Promise.all([
-                Helpers.writeFile('./json/FlightRaja.json', dataArr[0]),
-                Helpers.writeFile('./json/Flight365.json', dataArr[1])
+                // Helpers.writeFile('./json/FlightRaja.json', dataArr[0]),
+                // Helpers.writeFile('./json/Flight365.json', dataArr[1])
+                Helpers.writeFile('./json/HelloWorld.json', helloWorldData)
                 // Helpers.writeFile('./json/ExpediaSG.json', dataArr[2]),
-                // Helpers.writeFile('./json/HelloWorld.json', dataSetA)
             ])
             .then(_ => {
 
@@ -41,15 +41,18 @@ Promise.all([
                 console.log('Transforming into CSV...\n');
 
                 Promise.all([
-                        FlightRaja.jsonToCSV(dataArr[0], 'SYD', 'PEK'),
-                        Flight365.jsonToCSV(dataArr[1], 'SYD', 'PEK')
+                        // FlightRaja.jsonToCSV(dataArr[0], 'SYD', 'MAN'),
+                        // Flight365.jsonToCSV(dataArr[1], 'SYD', 'MAN'),
+                        HelloWorld.jsonToCSV(helloWorldData, 'SYD', 'MAN', '2017-05-25', '2017-05-28')
+
                     ])
-                    .then(dataArr => {
+                    .then(dataArr2 => {
 
                         // STEP 4 - Save results as one CSV
                         console.log('Joining CSVs...\n');
 
-                        let joinedArr = [CSVModel].concat(dataArr[0], dataArr[1]);
+                        // let joinedArr = [CSVModel].concat(dataArr2[0], dataArr2[1]);
+                        let joinedArr = [CSVModel].concat(dataArr2[0]);
                         let finalArrRows = joinedArr.map(i => i.join(',')).join('\n');
                         Helpers.writeFile('./csv/allOTAs.csv', finalArrRows);
 

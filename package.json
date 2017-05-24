@@ -1,5 +1,5 @@
 {
-  "name": "airline-scraper",
+  "name": "air-combinator",
   "version": "1.0.0",
   "description": "https://www.via.id/",
   "main": "scraper.js",
@@ -9,6 +9,7 @@
   "author": "Daniel Chan",
   "license": "ISC",
   "dependencies": {
+    "moment": "^2.18.1",
     "request": "^2.81.0"
   }
 }

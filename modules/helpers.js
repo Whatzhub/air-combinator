@@ -71,13 +71,13 @@ Helpers.downloadWithRequestLib = function (otaObj) {
     var timeLapsed = setInterval(() => {
         timer += 1;
         if (timer > 60) clearInterval(timeLapsed);
-        console.log('Time lapsed:', timer, 'secs...');
+        console.log('Time lapsed:', otaObj.host, timer, 'secs...');
     }, 1000);
 
     return new Promise((resolve, reject) => {
         request(options, function (error, response, body) {
             if (error) reject(error);
-            // console.log(body);
+            console.log(body);
             clearInterval(timeLapsed);
             resolve(body);
         })
