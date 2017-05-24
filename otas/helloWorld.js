@@ -9,27 +9,34 @@ const HelloWorld = {
         'cache-control': 'no-cache',
         'content-type': 'application/json'
     },
-    body: {
-        "legs": [{
-            "origin": "SYD",
-            "destination": "MAN",
-            "departureDate": "2017-05-25",
-            "span": "Anytime"
-        }, {
-            "origin": "MAN",
-            "destination": "SYD",
-            "departureDate": "2017-05-28",
-            "span": "Anytime"
-        }],
-        "passengers": {
-            "childrenAge": [],
-            "adults": 1,
-            "children": 0
-        },
-        "carrier": [],
-        "cabin": "C",
-        "type": "air",
-        "triptype": "roundtrip"
+    body: function (origin, destination, departDate, returnDate) {
+    let o = origin;
+    var d = destination;
+    let dDate = departDate;
+    let rDate = returnDate;
+
+        return JSON.parse(`{
+            "legs": [{
+                "origin": "${o}",
+                "destination": "${d}",
+                "departureDate": "${dDate}",
+                "span": "Anytime"
+            }, {
+                "origin": "${d}",
+                "destination": "${o}",
+                "departureDate": "${rDate}",
+                "span": "Anytime"
+            }],
+            "passengers": {
+                "childrenAge": [],
+                "adults": 1,
+                "children": 0
+            },
+            "carrier": [],
+            "cabin": "C",
+            "type": "air",
+            "triptype": "roundtrip"
+        }`);
     },
     getRoutes: function (dataArr, legCode, count, routeString) {
         let cache = dataArr;

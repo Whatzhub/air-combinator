@@ -13,7 +13,14 @@ const FlightRaja = {
         'Via-Access-Token': 'c51b5435-cec6-4de2-b133-419139122a02',
         'X-Requested-With': 'XMLHttpRequest'
     },
-    body: "{\"sectorInfos\":[{\"src\":{\"code\":\"SYD\",\"name\":\"Sydney Kingsford Smith Arpt\",\"country\":\"Australia\",\"city\":\"Sydney\"},\"dest\":{\"code\":\"PEK\",\"name\":\"Beijing Capital Arpt\",\"country\":\"China\",\"city\":\"Beijing\"},\"date\":\"2017-05-25\",\"debug\":false},{\"src\":{\"code\":\"PEK\",\"name\":\"Beijing Capital Arpt\",\"country\":\"China\",\"city\":\"Beijing\"},\"dest\":{\"code\":\"SYD\",\"name\":\"Sydney Kingsford Smith Arpt\",\"country\":\"Australia\",\"city\":\"Sydney\"},\"date\":\"2017-05-28\",\"debug\":false}],\"class\":\"ALL\",\"paxCount\":{\"adt\":1,\"chd\":0,\"inf\":0},\"route\":\"ALL\",\"disc\":false,\"multiCity\":false,\"senior\":false,\"special\":false,\"domestic\":false,\"isOfflineSearch\":false,\"isPaxWiseCommission\":false,\"prefAirlines\":[{\"code\":\"GDS\"}]}",
+    body: function (origin, destination, departDate, returnDate) {
+        let o = origin;
+        var d = destination;
+        let dDate = departDate;
+        let rDate = returnDate;
+
+        return `{\"sectorInfos\":[{\"src\":{\"code\":\"${o}\",\"name\":\"Sydney Kingsford Smith Arpt\",\"country\":\"Australia\",\"city\":\"Sydney\"},\"dest\":{\"code\":\"${d}\",\"name\":\"Beijing Capital Arpt\",\"country\":\"China\",\"city\":\"Beijing\"},\"date\":\"${dDate}\",\"debug\":false},{\"src\":{\"code\":\"${d}\",\"name\":\"Beijing Capital Arpt\",\"country\":\"China\",\"city\":\"Beijing\"},\"dest\":{\"code\":\"${o}\",\"name\":\"Sydney Kingsford Smith Arpt\",\"country\":\"Australia\",\"city\":\"Sydney\"},\"date\":\"${rDate}\",\"debug\":false}],\"class\":\"ALL\",\"paxCount\":{\"adt\":1,\"chd\":0,\"inf\":0},\"route\":\"ALL\",\"disc\":false,\"multiCity\":false,\"senior\":false,\"special\":false,\"domestic\":false,\"isOfflineSearch\":false,\"isPaxWiseCommission\":false,\"prefAirlines\":[{\"code\":\"GDS\"}]}`
+    },
     jsonToCSV: function (data, departCode, returnCode, departDate, returnDate) {
         let jsonData = JSON.parse(data);
         let dc = departCode; // 'SYD'
@@ -25,22 +32,23 @@ const FlightRaja = {
         let rowIndex = 0;
         let returnIndex = 0;
         let journeys = jsonData.combinedJourneys;
+        let AUDIDR = 0.0001;
 
         return new Promise((resolve, reject) => {
             journeys.forEach((i, el) => {
 
                 // Fly Trip Pricing & Meta
-                    dataArr.push([
-                        'INR', // currency
-                        i.fares.totalFare.base.amount / 1000, // base
-                        i.fares.totalFare.tax.amount / 1000, // taxes
-                        i.fares.totalFare.total.amount / 1000, // fare
-                        market, // market
-                        FlightRaja.host, // OTA
-                        'N/A', // type
-                        dd, // departDate
-                        rd // returnDate
-                    ]);
+                dataArr.push([
+                    'AUD', // default currency was IDR
+                    i.fares.totalFare.base.amount * AUDIDR, // base
+                    i.fares.totalFare.tax.amount * AUDIDR, // taxes
+                    i.fares.totalFare.total.amount * AUDIDR, // fare
+                    market, // market
+                    FlightRaja.host, // OTA
+                    'N/A', // type
+                    dd, // departDate
+                    rd // returnDate
+                ]);
 
                 i.flights.forEach((j, el2) => {
 
@@ -75,7 +83,7 @@ const FlightRaja = {
                     if (j.depDetail.code == rc && j.arrDetail.code == dc && j.isReturn == true) {
                         let departTime = moment.parseZone(j.depDetail.time).format('HH:mm');
                         let arrivalTime = moment.parseZone(j.arrDetail.time).format('HH:mm');
-                        
+
                         dataArr[rowIndex] = dataArr[rowIndex].concat([
                             j.flightNo, // departFlight
                             j.carrier.code, // departAirlineCode
@@ -88,13 +96,13 @@ const FlightRaja = {
                         returnIndex = el2;
                     }
 
-                     // > 1 Fly Return Leg
+                    // > 1 Fly Return Leg
                     if (j.depDetail.code != rc && j.arrDetail.code == dc && j.isReturn == true) {
                         let departTime1 = moment.parseZone(i.flights[returnIndex].depDetail.time).format('HH:mm');
                         let arrivalTime1 = moment.parseZone(i.flights[returnIndex].arrDetail.time).format('HH:mm');
                         let departTime2 = moment.parseZone(i.flights[el2].depDetail.time).format('HH:mm');
                         let arrivalTime2 = moment.parseZone(i.flights[el2].arrDetail.time).format('HH:mm');
-                        
+
                         dataArr[rowIndex] = dataArr[rowIndex].concat([
                             i.flights[returnIndex].flightNo + ' - ' + i.flights[el2].flightNo,
                             i.flights[returnIndex].carrier.code + ' - ' + i.flights[el2].carrier.code,

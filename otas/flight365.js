@@ -9,7 +9,16 @@ const Flight365 = {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
     },
-    body: 'searchparams%5Bjourneys%5D%5B0%5D%5Borigin%5D=SYD&searchparams%5Bjourneys%5D%5B0%5D%5Bdestination%5D=PEK&searchparams%5Bjourneys%5D%5B0%5D%5Bdeparturedate%5D=2017-05-25&searchparams%5Bjourneys%5D%5B0%5D%5Bcabinclass%5D=Economy&searchparams%5Bjourneys%5D%5B1%5D%5Borigin%5D=PEK&searchparams%5Bjourneys%5D%5B1%5D%5Bdestination%5D=HKG&searchparams%5Bjourneys%5D%5B1%5D%5Bdeparturedate%5D=2017-05-28&searchparams%5Bjourneys%5D%5B1%5D%5Bcabinclass%5D=Economy&searchparams%5Bpassengers%5D%5Badt%5D=1&searchparams%5Bpassengers%5D%5Bcnn%5D=0&searchparams%5Bpassengers%5D%5Binf%5D=0&token=bhkq40v4gqcbpz0t2nccckfigngquso2',
+    body: function (origin, destination, departDate, returnDate) {
+        let o = origin;
+        var d = destination;
+        let dDate = departDate;
+        let rDate = returnDate;
+        let token = 'bhkq40v4gqcbpz0t2nccckfigngquso2';
+
+
+        return `searchparams%5Bjourneys%5D%5B0%5D%5Borigin%5D=${o}&searchparams%5Bjourneys%5D%5B0%5D%5Bdestination%5D=${d}&searchparams%5Bjourneys%5D%5B0%5D%5Bdeparturedate%5D=${dDate}&searchparams%5Bjourneys%5D%5B0%5D%5Bcabinclass%5D=Economy&searchparams%5Bjourneys%5D%5B1%5D%5Borigin%5D=${d}&searchparams%5Bjourneys%5D%5B1%5D%5Bdestination%5D=${o}&searchparams%5Bjourneys%5D%5B1%5D%5Bdeparturedate%5D=${rDate}&searchparams%5Bjourneys%5D%5B1%5D%5Bcabinclass%5D=Economy&searchparams%5Bpassengers%5D%5Badt%5D=1&searchparams%5Bpassengers%5D%5Bcnn%5D=0&searchparams%5Bpassengers%5D%5Binf%5D=0&token=${token}`
+    },
     jsonToCSV: function (data, departCode, returnCode, departDate, returnDate) {
         let jsonData = JSON.parse(data);
         let dc = departCode;
@@ -21,7 +30,7 @@ const Flight365 = {
         let market = dc + rc;
         let markets = jsonData.data.filters;
         let itineraries = jsonData.data.itineraries;
-        
+
 
         return new Promise((resolve, reject) => {
             itineraries.forEach((i, el) => {
@@ -39,7 +48,7 @@ const Flight365 = {
                             i.pricing.tax, // taxes
                             i.pricing.total, // fare
                             market, // market
-                            Flight365.host,// OTA
+                            Flight365.host, // OTA
                             departLeg1.cabin, // type
                             dd, // departDate
                             rd // returnDate
@@ -48,7 +57,7 @@ const Flight365 = {
                         // 1 Fly Depart Leg
                         if (!j.legs[1]) {
                             dataArr[rowIndex] = dataArr[rowIndex].concat([
-                                
+
                                 departLeg1.carrier.flightnumber, // departFlight
                                 departLeg1.carrier.code, // departAirlineCode
                                 (departLeg1.origin.departuretime.time + ' - ' + departLeg1.origin.code + ' | ' + departLeg1.destination.arrivaltime.time + ' - ' + departLeg1.destination.code) // departRoute

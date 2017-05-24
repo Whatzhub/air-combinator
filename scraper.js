@@ -10,15 +10,22 @@ const Flight365 = require('./otas/flight365');
 const ExpediaSG = require('./otas/expediaSG');
 const HelloWorld = require('./otas/helloWorld');
 
+
 // THE SCRAPING ENGINE
+
+// Define user query params
+const origin = 'SYD';
+const destination = 'PEK';
+const departDate = '2017-05-28';
+const returnDate = '2017-05-30';
 
 // STEP 1 - Fares Scraping
 console.log('Running Fares Scraping.\n');
 
 Promise.all([
-        // Helpers.downloadWithHttpsXml(FlightRaja),
-        // Helpers.downloadWithHttps(Flight365),
-        Helpers.downloadWithRequestLib(HelloWorld)
+        Helpers.downloadWithHttpsXml(FlightRaja, FlightRaja.body(origin, destination, departDate, returnDate)),
+        Helpers.downloadWithHttps(Flight365, Flight365.body(origin, destination, departDate, returnDate)),
+        Helpers.downloadWithRequestLib(HelloWorld, HelloWorld.body(origin, destination, departDate, returnDate))
         // Helpers.downloadWithHttps(ExpediaSG)
     ])
     .then(dataArr => {
@@ -26,11 +33,14 @@ Promise.all([
         // STEP 2 - Save results as JSON
         console.log('Fares Scraping done.\n');
         console.log('Writing JSON copies...\n');
-        let helloWorldData = JSON.stringify((dataArr[0].data.result));
+
+        let flightRajaData = dataArr[0]
+        let flight365Data = dataArr[1];
+        let helloWorldData = JSON.stringify((dataArr[2].data.result));
 
         Promise.all([
-                // Helpers.writeFile('./json/FlightRaja.json', dataArr[0]),
-                // Helpers.writeFile('./json/Flight365.json', dataArr[1])
+                Helpers.writeFile('./json/FlightRaja.json', flightRajaData),
+                Helpers.writeFile('./json/Flight365.json', flight365Data),
                 Helpers.writeFile('./json/HelloWorld.json', helloWorldData)
                 // Helpers.writeFile('./json/ExpediaSG.json', dataArr[2]),
             ])
@@ -41,20 +51,23 @@ Promise.all([
                 console.log('Transforming into CSV...\n');
 
                 Promise.all([
-                        // FlightRaja.jsonToCSV(dataArr[0], 'SYD', 'MAN'),
-                        // Flight365.jsonToCSV(dataArr[1], 'SYD', 'MAN'),
-                        HelloWorld.jsonToCSV(helloWorldData, 'SYD', 'MAN', '2017-05-25', '2017-05-28')
-
+                        FlightRaja.jsonToCSV(flightRajaData, origin, destination, departDate, returnDate),
+                        Flight365.jsonToCSV(flight365Data, origin, destination, departDate, returnDate),
+                        HelloWorld.jsonToCSV(helloWorldData, origin, destination, departDate, returnDate)
+                        // Expedia pending
                     ])
                     .then(dataArr2 => {
 
                         // STEP 4 - Save results as one CSV
                         console.log('Joining CSVs...\n');
 
-                        // let joinedArr = [CSVModel].concat(dataArr2[0], dataArr2[1]);
-                        let joinedArr = [CSVModel].concat(dataArr2[0]);
-                        let finalArrRows = joinedArr.map(i => i.join(',')).join('\n');
-                        Helpers.writeFile('./csv/allOTAs.csv', finalArrRows);
+                        let flightRajaCSV = dataArr2[0];
+                        let flight365CSV = dataArr2[1];
+                        let helloWorldCSV = dataArr2[2];
+
+                        let joinedArr = [CSVModel].concat(flightRajaCSV, flight365CSV, helloWorldCSV);
+                        let finalCSV = joinedArr.map(i => i.join(',')).join('\n');
+                        Helpers.writeFile('./csv/allOTAs.csv', finalCSV);
 
                         return console.log('All processes successfully done!');
                     })

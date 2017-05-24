@@ -57,14 +57,14 @@ Helpers.download = function (url) {
 }
 
 
-Helpers.downloadWithRequestLib = function (otaObj) {
+Helpers.downloadWithRequestLib = function (otaObj, bodyParams) {
     var timer = 0;
 
     var options = {
         method: otaObj.method || 'POST',
         url: otaObj.url,
         headers: otaObj.headers,
-        body: otaObj.body,
+        body: bodyParams,
         json: true
     };
 
@@ -84,7 +84,7 @@ Helpers.downloadWithRequestLib = function (otaObj) {
     });
 }
 
-Helpers.downloadWithHttpsXml = function (otaObj) {
+Helpers.downloadWithHttpsXml = function (otaObj, bodyParams) {
     var timer = 0;
 
     var options = {
@@ -129,13 +129,13 @@ Helpers.downloadWithHttpsXml = function (otaObj) {
             reject(err);
         });
 
-        if (otaObj.body) req.write(otaObj.body);
+        if (bodyParams) req.write(bodyParams);
         req.end();
     })
 }
 
 
-Helpers.downloadWithHttps = function (otaObj) {
+Helpers.downloadWithHttps = function (otaObj, bodyParams) {
     var timer = 0;
 
     var options = {
@@ -180,7 +180,7 @@ Helpers.downloadWithHttps = function (otaObj) {
             reject(err);
         });
 
-        if (otaObj.body) req.write(otaObj.body);
+        if (bodyParams) req.write(bodyParams);
         req.end();
     })
 }
