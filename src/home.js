@@ -31,7 +31,7 @@ var home = new Vue({
         // OTA Data
         otas: Store.state.otas.otaMap,
         // Home Data
-        homeScreen: false,
+        homeScreen: true,
         quotes: {
             url: 'http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=10',
             posts: []
@@ -39,6 +39,7 @@ var home = new Vue({
     },
     mounted: function () {
         console.log('Home screen loaded!');
+        console.log(this.homeScreen);
         loadingScreen.finish();
 
         // init autocomplete datalist
@@ -97,23 +98,6 @@ var home = new Vue({
     },
     methods: {
         submitSearch: function (e) {
-            // Init Search Pending Screen
-            var searchPendingScreen = Wait.pleaseWait({
-                logo: "",
-                backgroundColor: "#c9f1ff",
-                loadingHtml: Preloaders.cube
-            });
-
-
-            var quoteTimer = setInterval(function () {
-                var index = Helpers.randomNumber(0, home.quotes.posts.length);
-                searchPendingScreen.updateLoadingHtml(`
-                    ${Preloader.cube}
-                    <blockquote>
-                        ${home.quotes.posts[index].content}
-                        <cite>${home.quotes.posts[index].title}</cite>
-                    </blockquote>`);
-            }, 5000);
 
             // Get latest form input values
             this.searchObj.origin = document.getElementById('origin').value;
@@ -125,6 +109,59 @@ var home = new Vue({
             var inputValid = this.validateInput();
             if (!inputValid) return alert('You got to fill in your fields!');
 
+            // Init Search Pending Screen
+            var searchPendingScreen = Wait.pleaseWait({
+                logo: "",
+                backgroundColor: "#c9f1ff",
+                loadingHtml: `
+                    ${Preloaders.foldingCube}
+                    <h3>Please wait while we return your search results...</h3>
+                    <blockquote>
+                        ${home.quotes.posts[0].content}
+                        <p><cite> - ${home.quotes.posts[0].author}</cite></p>
+                    </blockquote>`
+            });
+
+            // Loop over quotes while pending
+            var quoteTimer = setInterval(function () {
+                var index = Helpers.randomNumber(1, home.quotes.posts.length);
+                searchPendingScreen.updateLoadingHtml(`
+                    ${Preloaders.foldingCube}
+                    <h3>Please wait while we return your search results...</h3>
+                    <blockquote>
+                        ${home.quotes.posts[index].content}
+                        <p><cite> - ${home.quotes.posts[index].author}</cite></p>
+                    </blockquote>`);
+            }, 10000);
+
+            // NOTE: TESTING
+            setTimeout(function () {
+                // Change to plain background
+                var body = document.getElementsByTagName('body')[0];
+                body.style.backgroundImage = 'none';
+
+                
+                searchPendingScreen.finish();
+                clearInterval(quoteTimer);
+
+                 // Init Search Pending Screen
+            var successScreen = Wait.pleaseWait({
+                logo: "",
+                backgroundColor: "#c9f1ff",
+                loadingHtml: `
+                <h1 class="limegreen"><i class="fa fa-check"></i> Success!</h1>
+                <h3>Returning your search results...</h3>
+                `
+            });
+            setTimeout(function() {
+                home.homeScreen = false;
+                results.resultsScreen = true;
+                successScreen.finish();
+            }, 2000)
+
+            }, 12000);
+            return console.log('testing done');
+
             // Send submit request      
             var config = {
                 method: 'post',
@@ -132,31 +169,20 @@ var home = new Vue({
                 data: home.searchObj
             };
 
-            setTimeout(function () {
-                searchPendingScreen.finish();
-                clearInterval(quoteTimer);
-            }, 8000);
-            return console.log('testing done');
-
             axios.request(config)
                 .then(function (res) {
-                    searchPendingScreen.finish();
+                    // Change to plain background
+                    var body = document.getElementsByTagName('body')[0];
+                    body.style.backgroundImage = `url("https://duffy.fedorapeople.org/art/f15/sky-background.svg")`;
+                    body.style.backgroundSize = 'initial';
+
                     clearInterval(quoteTimer);
-                    console.log(123, res.data);
+                    home.homeScreen = false;
+                    results.resultsScreen = true;
+                    searchPendingScreen.finish();
+
                     var csvString = res.data;
-                    var blob = new Blob([csvString]);
-                    if (window.navigator.msSaveOrOpenBlob) // IE hack;
-                        window.navigator.msSaveBlob(blob, "otaResults.csv");
-                    else {
-                        var a = window.document.createElement("a");
-                        a.href = window.URL.createObjectURL(blob, {
-                            type: "text/plain"
-                        });
-                        a.download = "otaResults.csv";
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    }
+                    results.createDownloadBtn(csvString);
                 })
                 .catch(function (err) {
                     console.log(126, err);
@@ -167,7 +193,14 @@ var home = new Vue({
             axios.get(home.quotes.url)
                 .then(res => {
                     var data = res.data;
-                    home.quotes.posts = data;
+                    var dataWithoutTags = data.map(i => {
+                        var cleanedQuote = i.content.replace(/<p[^>]*>|<\/p[^>]*>/g, "");
+                        return {
+                            content: cleanedQuote,
+                            author: i.title
+                        }
+                    });
+                    home.quotes.posts = dataWithoutTags;
                     console.log(home.quotes.posts);
                 })
                 .catch(err => console.log(162, err));
@@ -191,5 +224,36 @@ var home = new Vue({
     }
 });
 
+
+// Vue Instance #2 - Results
+var results = new Vue({
+    data: {
+        // Results Data
+        resultsScreen: false,
+        resultsData: [],
+        csvLink: '',
+        csvName: ''
+    },
+    mounted: function () {
+        console.log('Results screen loaded!');
+    },
+    methods: {
+        init: function () {
+
+        },
+        createDownloadBtn: function (csvString) {
+            var timeStamp = moment().unix();
+            var csvData = csvString;
+            var blob = new Blob([csvData], {
+                type: "text/csv; charset=utf-8"
+            });
+            results.csvLink = URL.createObjectURL(blob);
+            results.csvName = `otaResults-${timeStamp}.csv`;
+        }
+    }
+});
+
+
 // Mount the Vue Instances
 home.$mount('#home');
+results.$mount('#results');

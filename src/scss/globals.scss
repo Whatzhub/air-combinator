@@ -36,15 +36,18 @@ body.pg-loaded>#play {display: block;}
 
 .container {padding: 0px 40px 0px 40px;}
 .chewy-font {font-family: 'Chewy', cursive;}
+.big-font {font-size: 3em;}
 .italic {font-style: italic;}
 .indigo {color: indigo;}
 .chocolate {color: chocolate;}
 .limegreen {color: limegreen;}
+.blue {color: #0074d9;}
 .gold {color: gold;}
 .white {color: white;}
 .hidden {display: none;}
 .center {text-align: center;}
 .right {text-align: right;}
+.border-btm {border-bottom: 1px solid #000}
 .pl-10 {padding-left: 10px;}
 .pb-20 {padding-bottom: 20px;}
 .pt-20 {padding-top: 20px;}
@@ -53,8 +56,28 @@ body.pg-loaded>#play {display: block;}
 .mt-20 {margin-top: 20px;}
 .mb-20 {margin-bottom: 20px;}
 
+// Random Quotes
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 20px 100px 20px 100px;
+  padding: 20px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+// Import Partials
+
 @import "preloader-vendor";
 @import "preloader";
 @import "transitions";
 @import "pikadate";
 @import "home";
+@import "results";

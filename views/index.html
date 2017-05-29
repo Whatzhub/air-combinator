@@ -15,11 +15,11 @@
 <body>
 
     <!-- Home Screen View -->
-    <section id="home">
+    <section id="home" v-if="homeScreen">
         <div class="container">
 
-            <div class="flex center pt-50">
-                <h1 class="chewy-font">Air Combinator - v1.0</h1>
+            <div class="flex center pt-20">
+                <h1 class="chewy-font big-font blue">Air Combinator - v1.0</h1>
             </div>
 
 
@@ -100,6 +100,53 @@
         <!-- End of Container -->
     </section>
     <!-- End of Home Screen View -->
+
+
+    <!-- Results Screen View -->
+    <section id="results" v-if="resultsScreen">
+        <div class="container">
+
+            <div class="flex center pt-20">
+                <h1 class="chewy-font big-font blue">Air Combinator - v1.0</h1>
+            </div>
+
+
+            <div class="flex center border-btm">
+                <h3 class=""><em>Here are some stats from your OTA competitors.</em></h3>
+            </div>
+
+            <div class="flex two-500 three-800 center pt-20 border-btm">
+                <div>
+                    <h3>Stats 1</h3>
+                </div>
+                <div>
+                   <h3>Stats 2</h3>
+                </div>
+                <div>
+                    <h3>Stats 3</h3>
+                </div>
+                <div>
+                    <h3>Stats 4</h3>
+                </div>
+            </div>
+
+            <div class="flex one center pt-20">
+                <h2 class="indigo"><i class="fa fa-plane fa-2x"></i> Your Search has been Successful!</h2>
+                <p><em>You may download your csv by clicking the button below:</em></p>
+                <div>
+                    <a class="button download-btn fa fa-file-text-o fa-1x success" :href="csvLink" :download="csvName" target="_blank"> Download CSV</a>
+                </div>
+            </div>
+
+            <div class="fixed-top-right">
+                <!-- Back to Home Button -->
+                <a class="button" href="/">Back to Home</a>
+            </div>
+
+        </div>
+        <!-- End of Container -->
+    </section>
+    <!-- End of Results Screen View -->
 
     <script src="js/awesomplete.js"></script>
     <script src="js/app.bundle.js"></script>
