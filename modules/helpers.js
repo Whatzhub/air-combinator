@@ -162,7 +162,7 @@ Helpers.downloadWithHttps = function (otaObj, bodyParams) {
 
             res.on('data', (chunk) => {
                 data += chunk;
-                // console.log(data);
+                console.log(data);
             })
 
             res.on('end', () => {

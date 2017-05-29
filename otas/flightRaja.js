@@ -112,7 +112,7 @@ const FlightRaja = {
                     }
                 });
                 rowIndex++;
-                console.log(dataArr);
+                // console.log(dataArr);
             });
 
             resolve(dataArr);

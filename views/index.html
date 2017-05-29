@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Air Combinator - A Fares Comparison Tool</title>
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="icon" type="image/gif" href="images/animated_favicon.gif">
+    <link href="https://fonts.googleapis.com/css?family=Chewy" rel="stylesheet">
+    <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/picnic.min.css">
+    <link rel="stylesheet" href="css/awesomplete.css">
+    <link rel="stylesheet" href="css/app.bundle.css">
+</head>
+
+<body>
+
+    <!-- Home Screen View -->
+    <section id="home">
+        <div class="container">
+
+            <div class="flex center pt-50">
+                <h1 class="chewy-font">Air Combinator - v1.0</h1>
+            </div>
+
+
+            <div class="flex center">
+                <h3 class=""><em>Find out your OTA competitors' pricing.</em></h3>
+            </div>
+
+            <div class="flex two-500 four-800 pt-20">
+                <div>
+                    <label for="origin-input" class="input-labels">Flying from</label>
+                    <input type="text" class="origin-input" id="origin" placeholder="e.g. SYD">
+                </div>
+                <div>
+                    <label for="destination-input" class="input-labels">Flying to</label>
+                    <input type="text" class="destination-input" id="destination" placeholder="e.g. PEK">
+                </div>
+                <div>
+                    <label for="departDate" class="input-labels">Departing</label>
+                    <input type="text" id="departDate" placeholder="yyyy-mm-dd">
+                </div>
+                <div>
+                    <label for="departDate" class="input-labels">Returning</label>
+                    <input type="text" id="returnDate" placeholder="yyyy-mm-dd">
+                </div>
+            </div>
+
+            <div class="flex center pt-20">
+                <h3><em>Pick your OTAs:</em></h3>
+            </div>
+            <div class="flex three-500 six-800 center">
+                <div class="ota-div" v-for="ota in otas">
+                    <label>
+            <input type="checkbox" :id="ota.name" @click="toggleOta">
+            <span class="toggle button warning ota-select-btn">{{ota.name}}</span>
+          </label>
+                </div>
+            </div>
+            <div class="center" v-if="searchObj.selectedOtas.length > 0">
+                <h3><em>You've selected:</em></h3>
+                <span class="label success" v-for="i in searchObj.selectedOtas">{{i}}</span>
+            </div>
+
+            <div class="flex center pt-20">
+                <div>
+                    <a class="button search-btn fa fa-search fa-1x" @click="submitSearch"> Search</a>
+                </div>
+            </div>
+
+            <div class="fixed-top-right">
+                <!-- How-To Modal -->
+                <label for="modal_1" class="button how-to-btn fa fa-book fa-1x"> How to use?</label>
+                <div class="modal">
+                    <input id="modal_1" type="checkbox" />
+                    <label for="modal_1" class="overlay"></label>
+                    <article>
+                        <header>
+                            <h3><i class="fa fa-book" aria-hidden="true"></i> How to Use?</h3>
+                            <label for="modal_1" class="close">&times;</label>
+                        </header>
+                        <section class="content">
+                            <p>Step 1 - <strong>Type in</strong> your airport codes.</p>
+                            <p>Step 2 - <strong>Select</strong> your dates.</p>
+                            <p>Step 3 - <strong>Pick</strong> the online-travel-agencies (OTAs) you want.
+                                <p>Step 4 - <strong>Click</strong> the <i class="fa fa-search"></i><em> Search</em> button.
+                                    <strong>Wait for it!</strong></p>
+                        </section>
+                        <footer>
+                            <label for="modal_1" class="button dangerous">
+              <h4>Back to page</h4>
+            </label>
+                        </footer>
+                    </article>
+                </div>
+                <!-- End of How-To Modal -->
+            </div>
+
+        </div>
+        <!-- End of Container -->
+    </section>
+    <!-- End of Home Screen View -->
+
+    <script src="js/awesomplete.js"></script>
+    <script src="js/app.bundle.js"></script>
+
+</body>
+
+</html>

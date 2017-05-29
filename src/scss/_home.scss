@@ -1,0 +1,67 @@
+#home {
+
+  // .origin-input {
+  //   color: $btn-color;
+  //   &:focus {
+  //     outline: none;
+  //     border: 2px solid $btn-color;
+  //   }
+  // }
+  .input-labels {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .ota-div {
+    margin: 0px;
+    padding: 0px;
+  }
+  .ota-select-btn {
+    width: 100%;
+    margin: 0px;
+    border-radius: 0px;
+  }
+  .search-btn {font-size: 1.8em; width: 250px;}
+  .how-to-btn {font-size: 1.2em;}
+
+  // Overrides
+  .modal .overlay ~ * {min-width: 50%;}
+  .awesomplete {display: block;}
+
+  // Random Quotes
+  blockquote {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-style: italic;
+    width: 500px;
+    margin: 0.25em 0;
+    padding: 0.25em 40px;
+    line-height: 1.45;
+    position: relative;
+    color: #383838;
+  }
+
+blockquote:before {
+    display: block;
+    content: "\201C";
+    font-size: 80px;
+    position: absolute;
+    left: -20px;
+    top: -20px;
+    color: #7a7a7a;
+  }
+
+blockquote cite {
+    color: #999999;
+    font-size: 14px;
+    display: block;
+    margin-top: 5px;
+  }
+ 
+blockquote cite:before {
+    content: "\2014 \2009";
+  }
+
+}
+
+

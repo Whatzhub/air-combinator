@@ -14,7 +14,7 @@ const Flight365 = {
         var d = destination;
         let dDate = departDate;
         let rDate = returnDate;
-        let token = 'bhkq40v4gqcbpz0t2nccckfigngquso2';
+        let token = 's5c18gwyv7b54f8bngp3deqq4cxz403f';
 
 
         return `searchparams%5Bjourneys%5D%5B0%5D%5Borigin%5D=${o}&searchparams%5Bjourneys%5D%5B0%5D%5Bdestination%5D=${d}&searchparams%5Bjourneys%5D%5B0%5D%5Bdeparturedate%5D=${dDate}&searchparams%5Bjourneys%5D%5B0%5D%5Bcabinclass%5D=Economy&searchparams%5Bjourneys%5D%5B1%5D%5Borigin%5D=${d}&searchparams%5Bjourneys%5D%5B1%5D%5Bdestination%5D=${o}&searchparams%5Bjourneys%5D%5B1%5D%5Bdeparturedate%5D=${rDate}&searchparams%5Bjourneys%5D%5B1%5D%5Bcabinclass%5D=Economy&searchparams%5Bpassengers%5D%5Badt%5D=1&searchparams%5Bpassengers%5D%5Bcnn%5D=0&searchparams%5Bpassengers%5D%5Binf%5D=0&token=${token}`
@@ -28,7 +28,6 @@ const Flight365 = {
         let dataArr = [];
         let rowIndex = 0;
         let market = dc + rc;
-        let markets = jsonData.data.filters;
         let itineraries = jsonData.data.itineraries;
 
 
@@ -98,7 +97,7 @@ const Flight365 = {
                     });
                 });
 
-                console.log(dataArr);
+                // console.log(dataArr);
             });
 
             resolve(dataArr);
