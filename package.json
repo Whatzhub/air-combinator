@@ -8,7 +8,7 @@
     "build": "webpack -p",
     "start": "start http://localhost:3000 & node server.js"
   },
-  "author": "Daniel Chan",
+  "author": "daniel.chan@travelport.com",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.16.1",
