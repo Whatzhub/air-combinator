@@ -4,11 +4,13 @@ import moment from 'moment';
 import Wait from 'please-wait';
 import Pikaday from 'pikaday';
 import axios from 'axios';
+import ss from 'simple-statistics';
 
 // Declare internal modules
 import Store from './js/store';
 import Helpers from './js/helpers';
 import Preloaders from './js/preloaders';
+import CSVModel from '../model/csvModel';
 
 // Initialize Globals
 var OTAs = {};
@@ -100,10 +102,10 @@ var home = new Vue({
         submitSearch: function (e) {
 
             // Get latest form input values
-            this.searchObj.origin = document.getElementById('origin').value;
-            this.searchObj.destination = document.getElementById('destination').value;
-            this.searchObj.departDate = document.getElementById('departDate').value;
-            this.searchObj.returnDate = document.getElementById('returnDate').value;
+            home.searchObj.origin = document.getElementById('origin').value;
+            home.searchObj.destination = document.getElementById('destination').value;
+            home.searchObj.departDate = document.getElementById('departDate').value;
+            home.searchObj.returnDate = document.getElementById('returnDate').value;
 
             // Perform input validation
             var inputValid = this.validateInput();
@@ -134,34 +136,6 @@ var home = new Vue({
                     </blockquote>`);
             }, 10000);
 
-            // NOTE: TESTING
-            setTimeout(function () {
-                // Change to plain background
-                var body = document.getElementsByTagName('body')[0];
-                body.style.backgroundImage = 'none';
-
-                
-                searchPendingScreen.finish();
-                clearInterval(quoteTimer);
-
-                 // Init Search Pending Screen
-            var successScreen = Wait.pleaseWait({
-                logo: "",
-                backgroundColor: "#c9f1ff",
-                loadingHtml: `
-                <h1 class="limegreen"><i class="fa fa-check"></i> Success!</h1>
-                <h3>Returning your search results...</h3>
-                `
-            });
-            setTimeout(function() {
-                home.homeScreen = false;
-                results.resultsScreen = true;
-                successScreen.finish();
-            }, 2000)
-
-            }, 12000);
-            return console.log('testing done');
-
             // Send submit request      
             var config = {
                 method: 'post',
@@ -171,21 +145,46 @@ var home = new Vue({
 
             axios.request(config)
                 .then(function (res) {
-                    // Change to plain background
-                    var body = document.getElementsByTagName('body')[0];
-                    body.style.backgroundImage = `url("https://duffy.fedorapeople.org/art/f15/sky-background.svg")`;
-                    body.style.backgroundSize = 'initial';
-
+                    var response = res.data.data;
+                    // console.log(147, response);
                     clearInterval(quoteTimer);
-                    home.homeScreen = false;
-                    results.resultsScreen = true;
                     searchPendingScreen.finish();
 
-                    var csvString = res.data;
-                    results.createDownloadBtn(csvString);
+                    // Init Search Pending Screen
+                    var successScreen = Wait.pleaseWait({
+                        logo: "",
+                        backgroundColor: "#c9f1ff",
+                        loadingHtml: `
+                        <h1 class="limegreen"><i class="fa fa-check"></i> Success!</h1>
+                        <h3>Returning your search results...</h3>`
+                    });
+                    setTimeout(function () {
+                        // Change to plain background
+                        var body = document.getElementsByTagName('body')[0];
+                        body.style.backgroundImage = 'none';
+                        home.homeScreen = false;
+                        results.resultsScreen = true;
+                        successScreen.finish();
+                    }, 2000);
+                    return response;
+                })
+                .then(function (response) {
+                    var csvArr = response;
+                    console.log(172, csvArr);
+
+                    // set data to Results vue instance
+                    results.csvData.dataArr = csvArr;
+                    results.searchObj = home.searchObj;
+
+                    // Perform calculations
+                    results.calcStats(csvArr);
+                    results.createDownloadBtn(csvArr);
                 })
                 .catch(function (err) {
                     console.log(126, err);
+                    clearInterval(quoteTimer);
+                    searchPendingScreen.finish();
+                    alert('A network error with the OTA APIs occured. Please retry.')
                 });
 
         },
@@ -230,25 +229,91 @@ var results = new Vue({
     data: {
         // Results Data
         resultsScreen: false,
-        resultsData: [],
+        searchObj: {},
         csvLink: '',
-        csvName: ''
+        csvName: '',
+        csvData: {
+            dataArr: [],
+            airFares: {
+                min: {
+                    fare: 0,
+                    ota: '',
+                    departFlightNo: '',
+                    returnFlightNo: ''
+                },
+                max: {
+                    fare: 0,
+                    ota: '',
+                    departFlightNo: '',
+                    returnFlightNo: ''
+                },
+                commonDepart: {
+                    flight: '',
+                    airline: '',
+                    route: ''
+                },
+                commonReturn: {
+                    flight: '',
+                    airline: '',
+                    route: ''
+                },
+                mean: 0,
+                median: 0,
+                mode: 0
+            }
+        }
     },
     mounted: function () {
         console.log('Results screen loaded!');
     },
     methods: {
-        init: function () {
-
-        },
-        createDownloadBtn: function (csvString) {
+        createDownloadBtn: function (csvArr) {
             var timeStamp = moment().unix();
-            var csvData = csvString;
+            var finalArr = [CSVModel].concat(csvArr);
+            var csvData = finalArr.map(i => i.join(',')).join('\n');
             var blob = new Blob([csvData], {
                 type: "text/csv; charset=utf-8"
             });
             results.csvLink = URL.createObjectURL(blob);
             results.csvName = `otaResults-${timeStamp}.csv`;
+
+        },
+        calcStats: function (csvArr) {
+            var data = csvArr;
+            data.shift();
+            var filterData = data.map(i => {
+                return {
+                    fare: i[3].toFixed(2),
+                    ota: i[5],
+                    departFlightNo: i[9],
+                    returnFlightNo: i[12]
+                }
+            });
+            var sortedData = filterData.sort((a, b) => a.fare - b.fare);
+
+            var fareData = data.map(i => i[3]);
+            
+            var departFlightData = data.map(i => i[9]);
+            var departAirlineData = data.map(i => i[10]);
+            var departRouteData = data.map(i => i[11]);
+            
+            var returnFlightData = data.map(i => i[12]);
+            var returnAirlineData = data.map(i => i[13]);
+            var returnRouteData = data.map(i => i[14]);
+
+            results.csvData.airFares.min = sortedData[0];
+            results.csvData.airFares.max = sortedData[sortedData.length - 1];
+            results.csvData.airFares.mean = ss.mean(fareData).toFixed(2);
+            results.csvData.airFares.median = ss.median(fareData).toFixed(2);
+            results.csvData.airFares.mode = ss.mode(fareData).toFixed(2);
+
+            results.csvData.airFares.commonDepart.flight = ss.modeFast(departFlightData);
+            results.csvData.airFares.commonDepart.airline = ss.modeFast(departAirlineData);
+            results.csvData.airFares.commonDepart.route = ss.modeFast(departRouteData);
+
+            results.csvData.airFares.commonReturn.flight = ss.modeFast(returnFlightData);
+            results.csvData.airFares.commonReturn.airline = ss.modeFast(returnAirlineData);
+            results.csvData.airFares.commonReturn.route = ss.modeFast(returnRouteData);
         }
     }
 });

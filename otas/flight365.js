@@ -1,6 +1,7 @@
 const Flight365 = {
     host: 'api2.fly365.com',
     path: '/api/flights/search',
+    name: 'Flight365',
     method: 'POST',
     headers: {
         'Accept': '*/*',
@@ -47,7 +48,7 @@ const Flight365 = {
                             i.pricing.tax, // taxes
                             i.pricing.total, // fare
                             market, // market
-                            Flight365.host, // OTA
+                            Flight365.name, // OTA
                             departLeg1.cabin, // type
                             dd, // departDate
                             rd // returnDate

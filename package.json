@@ -19,6 +19,7 @@
     "pikaday": "^1.5.1",
     "please-wait": "0.0.5",
     "request": "^2.81.0",
+    "simple-statistics": "^4.1.0",
     "vue": "^2.3.3"
   },
   "devDependencies": {

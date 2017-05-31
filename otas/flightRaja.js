@@ -2,6 +2,7 @@ const moment = require('moment');
 
 const FlightRaja = {
     host: 'www.via.id',
+    name: 'FlightRaja',
     path: '/apiv2/flight/search?&flowType=NODE&ajax=true&jsonData=true',
 
     method: 'POST',
@@ -44,7 +45,7 @@ const FlightRaja = {
                     i.fares.totalFare.tax.amount * AUDIDR, // taxes
                     i.fares.totalFare.total.amount * AUDIDR, // fare
                     market, // market
-                    FlightRaja.host, // OTA
+                    FlightRaja.name, // OTA
                     'N/A', // type
                     dd, // departDate
                     rd // returnDate

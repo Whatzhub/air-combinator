@@ -2,6 +2,7 @@ const moment = require('moment');
 
 const HelloWorld = {
     host: 'www.helloworld.com.au',
+    name: 'HelloWorld',
     url: 'https://www.helloworld.com.au/booking/api/search/search',
     method: 'POST',
     headers: {
@@ -10,10 +11,10 @@ const HelloWorld = {
         'content-type': 'application/json'
     },
     body: function (origin, destination, departDate, returnDate) {
-    let o = origin;
-    var d = destination;
-    let dDate = departDate;
-    let rDate = returnDate;
+        let o = origin;
+        var d = destination;
+        let dDate = departDate;
+        let rDate = returnDate;
 
         return JSON.parse(`{
             "legs": [{
@@ -39,8 +40,8 @@ const HelloWorld = {
         }`);
     },
     getRoutes: function (dataArr, legCode, count, routeString) {
-        let cache = dataArr;
-        let routes = routeString;
+        var cache = dataArr;
+        var routes = routeString;
 
         if (cache[count].arrivalAirport != legCode) {
             routes += (moment.parseZone(cache[count].departureDateTime).format('HH:mm') + ' - ' + cache[count].departureAirport) + ' / ' + (moment.parseZone(cache[count].arrivalDateTime).format('HH:mm') + ' - ' + cache[count].arrivalAirport) + ' | ';
@@ -53,8 +54,8 @@ const HelloWorld = {
         return this.getRoutes(cache, legCode, count, routes);
     },
     getFlightNo: function (dataArr, legCode, count, flightNoString) {
-        let cache = dataArr;
-        let flightNo = flightNoString;
+        var cache = dataArr;
+        var flightNo = flightNoString;
 
         if (cache[count].arrivalAirport != legCode) {
             flightNo += cache[count].flightNumber + ' - ';
@@ -67,8 +68,8 @@ const HelloWorld = {
         return this.getFlightNo(cache, legCode, count, flightNo);
     },
     getCarrierCode: function (dataArr, legCode, count, carrierCodeString) {
-        let cache = dataArr;
-        let carrierCode = carrierCodeString;
+        var cache = dataArr;
+        var carrierCode = carrierCodeString;
 
         if (cache[count].arrivalAirport != legCode) {
             carrierCode += cache[count].marketingCarrier + ' - ';
@@ -104,22 +105,24 @@ const HelloWorld = {
                     taxes, // taxes
                     totalFare, // fare
                     market, // market
-                    HelloWorld.host, // OTA
+                    HelloWorld.name, // OTA
                     i.legs[0].info.cabin.tooltip, // type
                     dd, // departDate
                     rd // returnDate
                 ]);
 
                 // >= 1 Fly Depart Leg
-                let departLegInfos = i.legs[0].legInfos;
-                let departRoutes = HelloWorld.getRoutes(departLegInfos, rc, 0, '');
-                let departFlightNo = HelloWorld.getFlightNo(departLegInfos, rc, 0, '');
-                let departCarrierCode = HelloWorld.getCarrierCode(departLegInfos, rc, 0, '');
-                dataArr[el] = dataArr[el].concat([
-                    departFlightNo, // departFlight
-                    departCarrierCode, // departAirlineCode
-                    departRoutes // departRoute
-                ]);
+                if (typeof i.legs[0].legInfos[0] !== 'undefined') {
+                    let departLegInfos = i.legs[0].legInfos;
+                    let departRoutes = HelloWorld.getRoutes(departLegInfos, rc, 0, '');
+                    let departFlightNo = HelloWorld.getFlightNo(departLegInfos, rc, 0, '');
+                    let departCarrierCode = HelloWorld.getCarrierCode(departLegInfos, rc, 0, '');
+                    dataArr[el] = dataArr[el].concat([
+                        departFlightNo, // departFlight
+                        departCarrierCode, // departAirlineCode
+                        departRoutes // departRoute
+                    ]);
+                }
 
                 // >= 1 Fly Return Leg
                 let returnLegInfos = i.legs[1].legInfos;

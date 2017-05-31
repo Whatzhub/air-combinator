@@ -19,11 +19,11 @@ app.post('/search', (req, res) => {
   Scraper.scrape(reqBody)
     .then(csvData => {
       console.log(csvData);
+    
+      res.json({
+        data: csvData
+      })
       console.log('Success! Returning csv file response to client.');
-      
-      let fileName = 'allOTAs.csv';
-      let file = __dirname + '/csv/' + fileName;
-      res.download(file);
     })
     .catch(err => console.log(22, err));
 });

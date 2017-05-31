@@ -112,26 +112,122 @@
 
 
             <div class="flex center border-btm">
-                <h3 class=""><em>Here are some stats from your OTA competitors.</em></h3>
+                <h3 class="">
+                    <em>Here are some stats from your OTA competitors.</em>
+                    <strong>Your search for: {{searchObj.origin}} to {{searchObj.destination}}, from {{searchObj.departDate}} - {{searchObj.returnDate}}</strong>
+                </h3>
             </div>
 
-            <div class="flex two-500 three-800 center pt-20 border-btm">
+            <div class="flex one center border-btm">
+                <h2>Currency <span class="label"> AUD</span></h2>
+            </div>
+
+            <div class="flex one-500 two-800 three-1200 center border-btm">
                 <div>
-                    <h3>Stats 1</h3>
+                    <h3>Lowest Air Fares</h3>
+                    <table class="primary align-center">
+                        <thead>
+                            <tr>
+                                <th>Fare</th>
+                                <th>OTA</th>
+                                <th>Depart Flight</th>
+                                <th>Return Flight</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{csvData.airFares.min.fare}}</td>
+                                <td>{{csvData.airFares.min.ota}}</td>
+                                <td>{{csvData.airFares.min.departFlightNo}}</td>
+                                <td>{{csvData.airFares.min.returnFlightNo}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div>
-                   <h3>Stats 2</h3>
+                    <h3>Air Fares Distribution</h3>
+                    <table class="success align-center">
+                        <thead>
+                            <tr>
+                                <th>Mean</th>
+                                <th>Median</th>
+                                <th>Mode</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{csvData.airFares.mean}}</td>
+                                <td>{{csvData.airFares.median}}</td>
+                                <td>{{csvData.airFares.mode}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div>
-                    <h3>Stats 3</h3>
+                    <h3>Highest Air Fares</h3>
+                    <table class="primary align-center">
+                        <thead>
+                            <tr>
+                                <th>Fare</th>
+                                <th>OTA</th>
+                                <th>Depart Flight</th>
+                                <th>Return Flight</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{csvData.airFares.max.fare}}</td>
+                                <td>{{csvData.airFares.max.ota}}</td>
+                                <td>{{csvData.airFares.max.departFlightNo}}</td>
+                                <td>{{csvData.airFares.max.returnFlightNo}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div>
-                    <h3>Stats 4</h3>
+                    <h3>Most Common Departures</h3>
+                    <table class="error align-center">
+                        <thead>
+                            <tr>
+                                <th>Flight</th>
+                                <th>Airline</th>
+                                <th>Route</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{csvData.airFares.commonDepart.flight}}</td>
+                                <td>{{csvData.airFares.commonDepart.airline}}</td>
+                                <td>{{csvData.airFares.commonDepart.route}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+                <div>
+                    <h3>Most Common Returns</h3>
+                    <table class="error align-center">
+                        <thead>
+                            <tr>
+                                <th>Flight</th>
+                                <th>Airline</th>
+                                <th>Route</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{csvData.airFares.commonReturn.flight}}</td>
+                                <td>{{csvData.airFares.commonReturn.airline}}</td>
+                                <td>{{csvData.airFares.commonReturn.route}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
 
             <div class="flex one center pt-20">
-                <h2 class="indigo"><i class="fa fa-plane fa-2x"></i> Your Search has been Successful!</h2>
+                <div class="indigo"><i class="fa fa-plane fa-5x"></i></div>
+                <h2 class="indigo">Your Search has been Successful!</h2>
                 <p><em>You may download your csv by clicking the button below:</em></p>
                 <div>
                     <a class="button download-btn fa fa-file-text-o fa-1x success" :href="csvLink" :download="csvName" target="_blank"> Download CSV</a>

@@ -134,7 +134,7 @@ Scraper.scrape = function (reqBody) {
                                 Helpers.writeFile('./csv/allOTAs.csv', finalCSV)
                                     .then(_3 => {
                                         console.log('All processes successfully done!');
-                                        resolve(finalCSV);
+                                        resolve(joinedArr);
                                     })
                                     .catch(err => console.log(56, err) && reject(err));
                             })

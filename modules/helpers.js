@@ -70,7 +70,7 @@ Helpers.downloadWithRequestLib = function (otaObj, bodyParams) {
 
     var timeLapsed = setInterval(() => {
         timer += 1;
-        if (timer > 60) clearInterval(timeLapsed);
+        if (timer > 120) clearInterval(timeLapsed);
         console.log('Time lapsed:', otaObj.host, timer, 'secs...');
     }, 1000);
 
@@ -97,7 +97,7 @@ Helpers.downloadWithHttpsXml = function (otaObj, bodyParams) {
 
     var timeLapsed = setInterval(() => {
         timer += 1;
-        if (timer > 60) clearInterval(timeLapsed);
+        if (timer > 120) clearInterval(timeLapsed);
         console.log('Time lapsed:', otaObj.host, timer, 'secs...');
     }, 1000);
 
@@ -148,7 +148,7 @@ Helpers.downloadWithHttps = function (otaObj, bodyParams) {
 
     var timeLapsed = setInterval(() => {
         timer += 1;
-        if (timer > 60) clearInterval(timeLapsed);
+        if (timer > 120) clearInterval(timeLapsed);
         console.log('Time lapsed:', otaObj.host, timer, 'secs...');
     }, 1000);
 
