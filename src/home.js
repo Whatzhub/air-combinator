@@ -145,7 +145,7 @@ var home = new Vue({
 
             axios.request(config)
                 .then(function (res) {
-                    if (!res.success) throw new Error('Request failed');
+                    if (!res.data.success) throw new Error('Request failed');
                     var response = res.data.data;
                     // console.log(147, response);
                     clearInterval(quoteTimer);
