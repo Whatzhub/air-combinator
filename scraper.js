@@ -40,7 +40,7 @@ Scraper.scrape = function (reqBody) {
                 index: 0
             },
             {
-                name: 'Flight365',
+                name: 'Fly365',
                 selected: false,
                 index: 0
             },
@@ -136,13 +136,13 @@ Scraper.scrape = function (reqBody) {
                                         console.log('All processes successfully done!');
                                         resolve(joinedArr);
                                     })
-                                    .catch(err => console.log(56, err) && reject(err));
+                                    .catch(err => reject(err));
                             })
-                            .catch(err => console.log(58, err) && reject(err));
+                            .catch(err => reject(err));
                     })
-                    .catch(err => console.log(62, err) && reject(err));
+                    .catch(err => reject(err));
             })
-            .catch(err => console.log(64, err) && reject(err));
+            .catch(err => reject(err));
     });
 
 };

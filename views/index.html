@@ -52,7 +52,7 @@
             <div class="flex three-500 six-800 center">
                 <div class="ota-div" v-for="ota in otas">
                     <label>
-            <input type="checkbox" :id="ota.name" @click="toggleOta">
+            <input type="checkbox" :id="ota.name" @click="toggleOta(ota.name)">
             <span class="toggle button warning ota-select-btn">{{ota.name}}</span>
           </label>
                 </div>
@@ -229,8 +229,11 @@
                 <div class="indigo"><i class="fa fa-plane fa-5x"></i></div>
                 <h2 class="indigo">Your Search has been Successful!</h2>
                 <p><em>You may download your csv by clicking the button below:</em></p>
-                <div>
+                <div v-if="!isIEBrowser">
                     <a class="button download-btn fa fa-file-text-o fa-1x success" :href="csvLink" :download="csvName" target="_blank"> Download CSV</a>
+                </div>
+                <div v-if="isIEBrowser">
+                    <a class="button download-btn fa fa-file-text-o fa-1x success" @click="downloadCSV" target="_blank"> Download CSV</a>
                 </div>
             </div>
 

@@ -145,6 +145,7 @@ var home = new Vue({
 
             axios.request(config)
                 .then(function (res) {
+                    if (!res.success) throw new Error('Request failed');
                     var response = res.data.data;
                     // console.log(147, response);
                     clearInterval(quoteTimer);
@@ -184,7 +185,7 @@ var home = new Vue({
                     console.log(126, err);
                     clearInterval(quoteTimer);
                     searchPendingScreen.finish();
-                    alert('A network error with the OTA APIs occured. Please retry.')
+                    alert('Request failed. Please retry with a non-VPN network.')
                 });
 
         },
@@ -204,12 +205,11 @@ var home = new Vue({
                 })
                 .catch(err => console.log(162, err));
         },
-        toggleOta: function (e) {
-            if (e.srcElement.checked) this.searchObj.selectedOtas.push(e.target.id);
-            else {
-                var index = this.searchObj.selectedOtas.indexOf(e.target.id);
-                if (index > -1) this.searchObj.selectedOtas.splice(index, 1);
-            }
+        toggleOta: function (id) {
+            console.log(209, id);
+            var index = this.searchObj.selectedOtas.indexOf(id);
+            if (index > -1) this.searchObj.selectedOtas.splice(index, 1);
+            else this.searchObj.selectedOtas.push(id);
         },
         validateInput: function () {
             var valid = true;
@@ -229,6 +229,7 @@ var results = new Vue({
     data: {
         // Results Data
         resultsScreen: false,
+        isIEBrowser: false,
         searchObj: {},
         csvLink: '',
         csvName: '',
@@ -274,9 +275,19 @@ var results = new Vue({
             var blob = new Blob([csvData], {
                 type: "text/csv; charset=utf-8"
             });
+            if (navigator.msSaveBlob) return results.isIEBrowser = true;
             results.csvLink = URL.createObjectURL(blob);
             results.csvName = `otaResults-${timeStamp}.csv`;
 
+        },
+        downloadCSV: function () {
+            var timeStamp = moment().unix();
+            var finalArr = [CSVModel].concat(results.csvData.dataArr);
+            var csvData = finalArr.map(i => i.join(',')).join('\n');
+            var blob = new Blob([csvData], {
+                type: "text/csv; charset=utf-8"
+            });
+            navigator.msSaveBlob(blob, `otaResults-${timeStamp}.csv`); // IE 10+
         },
         calcStats: function (csvArr) {
             var data = csvArr;

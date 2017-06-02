@@ -65,7 +65,8 @@ Helpers.downloadWithRequestLib = function (otaObj, bodyParams) {
         url: otaObj.url,
         headers: otaObj.headers,
         body: bodyParams,
-        json: true
+        json: true,
+        timeout: 120000
     };
 
     var timeLapsed = setInterval(() => {

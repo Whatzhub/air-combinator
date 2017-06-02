@@ -21,11 +21,19 @@ app.post('/search', (req, res) => {
       console.log(csvData);
     
       res.json({
+        success: true,
         data: csvData
       })
       console.log('Success! Returning csv file response to client.');
     })
-    .catch(err => console.log(22, err));
+    .catch(err => {
+      console.log(22, err);
+      
+      res.json({
+        success: false,
+        data: []
+      })
+    });
 });
 
 server.listen(3000, () => {

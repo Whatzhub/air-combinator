@@ -1,7 +1,7 @@
 const OTATable = {
     
     '01': 'FlightRaja',
-    '02': 'Flight365',
+    '02': 'Fly365',
     '03': 'HelloWorld',
     '04': 'ExpediaSG' // pending
 };

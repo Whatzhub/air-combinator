@@ -1,7 +1,7 @@
 const Flight365 = {
     host: 'api2.fly365.com',
     path: '/api/flights/search',
-    name: 'Flight365',
+    name: 'Fly365',
     method: 'POST',
     headers: {
         'Accept': '*/*',

@@ -1,34 +1,35 @@
 ### AIR COMBINATOR v1.0.0 ###
 
-### OTA LISTs ###
+### Supported OTAs List ###
 
 * https://www.via.id/ - done
 * https://www.fly365.com - done
-* https://www.expedia.com.sg - done (require an extra step to manually get the 'c' key value)
-* https://www.helloworld.com.au
+* https://www.helloworld.com.au - done
+* https://www.expedia.com.sg - pending (require an extra step to manually get the 'c' key value)
 
+### App Stack ###
 
-### TODOS ###
-
-1. Client-side Validation
-    - disallow if departure day is today
-2. Add further OTAs
+1. Node.js + Express.js as local backend + server
+2. Vue.js as frontend view
+3. A scraping engine `scraper.js` that can be extended to include other OTAs
 
 ### How do I get set up? ###
 
-webpack -p
-Note: The p flag is “production” mode and uglifies/minifies output.
+1. Install Node.js (https://nodejs.org/en/)
+2. Run `npm install` on app root path
+3. Run `npm start` and happy developing!
 
-webpack --watch
+* To Build
+Run `webpack -p`
+Note: The p flag is “production” mode and uglifies/minifies output. Also required when new folder/files added.
 
-webpack --display-error-details
+* To continuously-build while in dev mode
+Run `webpack --watch`
+Note: Run this together with `npm start` for rapid development
 
-sass --watch index.scss:index.css init.scss:init.css --style compressed
-
-uglifyjs ./dist/index.js \
-         -o ./dist/index.min.js \
-         -p 5 -c -m
+* To display error log details in dev mode
+Run `webpack --display-error-details`
 
 ### Who do I talk to? ###
 
-* Daniel Chan, Technical Optimization Team @TVPT HK
+`Daniel Chan, daniel.chan@travelport.com, Technology Optimization Team @APAC`

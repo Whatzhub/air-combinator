@@ -7,7 +7,7 @@ var Store = {
         otas: {
             otaMap: [
                 {name: 'FlightRaja'},
-                {name: 'Flight365'},
+                {name: 'Fly365'},
                 {name: 'HelloWorld'}
             ]
         },
